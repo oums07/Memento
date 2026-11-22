@@ -1,0 +1,70 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+left to right direction
+
+class Site {
+    - title : String
+    - pages : Map<String, Page>
+    + addPage(page : Page) : void
+    + removePage(page : Page) : void
+    + render(title : String) : void
+}
+
+class Page <<Originator>> {
+    - title : String
+    - author : String
+    - content : List<Tag>
+    + Page(title : String, author : String)
+    + getTitle() : String
+    + setTitle(title : String) : void
+    + addTag(tag : Tag) : void
+    + removeTag(tag : Tag) : void
+    + toHTML() : String
+    + save() : PageMemento
+    + restore(memento : PageMemento) : void
+}
+
+class PageMemento <<Memento>> {
+    - title : String
+    - author : String
+    - content : List<Tag>
+    + PageMemento(title : String, author : String, content : List<Tag>)
+    + getTitle() : String
+    + getAuthor() : String
+    + getContent() : List<Tag>
+}
+
+class PageHistory <<Caretaker>> {
+    - history : Deque<PageMemento>
+    + add(memento : PageMemento) : void
+    + undo() : PageMemento
+}
+
+abstract class Tag {
+    # text : String
+    + getText() : String
+    + setText(text : String) : void
+    + copy() : Tag
+    + toHTML() : String
+}
+
+class Paragraph
+class Title
+class Link
+class Image
+
+' Relations du CMS de base
+Tag <|-- Paragraph
+Tag <|-- Title
+Tag <|-- Link
+Tag <|-- Image
+
+Site --> "*" Page : pages
+Page --> "*" Tag : content
+
+' Relations du Memento
+Page ..> PageMemento : crée / restaure
+PageHistory --> "*" PageMemento : stocke
+
+@enduml
