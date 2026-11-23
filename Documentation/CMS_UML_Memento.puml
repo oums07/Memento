@@ -54,8 +54,8 @@ class Title
 class Link
 class Image
 
-' Relations du CMS de base
-Tag <|-- Paragraphd
+
+Tag <|-- Paragraph
 Tag <|-- Title
 Tag <|-- Link
 Tag <|-- Image
@@ -63,7 +63,7 @@ Tag <|-- Image
 Site --> "*" Page : pages
 Page --> "*" Tag : content
 
-' Relations du Memento
+
 Page ..> PageMemento : crée / restaure
 PageHistory "1" o-- "0..*" PageMemento : history
 
